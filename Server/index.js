@@ -27,7 +27,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 dotenv.config();
 const app = express();
-app.use(expree.json());
+app.use(express.json());
 app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({policy: "cross-origin"}));
 app.use(morgan("common"));
@@ -49,16 +49,17 @@ const storage = multer.diskStorage({
 const upload = multer({storage});
 
 // Mongoose SETUP
+mongoose.set("strictQuery", false);
 const PORT = process.env.PORT || 6001;
 mongoose.connect(process.env.MONGO_URL, {
-    useNewURLParse: true,
+    useNewURLParser: true,
     useUnifiedTopology: true,
 }).then(()=> {
     app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
 
     // one time use data
-    User.insertMany(users);
-    Post.insertMany(posts);
+    // User.insertMany(users);
+    // Post.insertMany(posts);
 }).catch((error) => console.log(`${error} did not connect`));
 
 // Routes with files
